@@ -2,6 +2,8 @@ package com.kp.mediatracker.model;
 
 import jakarta.persistence.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -15,11 +17,12 @@ public class MediaItem {
     private String genre;
     private String category;
 
+    // Date will be stored on sql table in format: YYYY-MM-DD
     @Column(name = "watched_on")
+    @Temporal(TemporalType.DATE)
     private Date watchedOn;
 
-    @Column(name = "is_favorite")
-    private boolean isFavorite;
+    private boolean favorite;
 
     @Column(name = "release_year")
     private int releaseYear;
@@ -27,13 +30,13 @@ public class MediaItem {
     public MediaItem() {
     }
 
-    public MediaItem(long id, String name, String genre, String category, Date watchedOn, boolean isFavorite, int releaseYear) {
+    public MediaItem(long id, String name, String genre, String category, Date watchedOn, boolean favorite, int releaseYear) {
         this.id = id;
         this.name = name;
         this.genre = genre;
         this.category = category;
         this.watchedOn = watchedOn;
-        this.isFavorite = isFavorite;
+        this.favorite = favorite;
         this.releaseYear = releaseYear;
     }
 
@@ -73,16 +76,13 @@ public class MediaItem {
         return watchedOn;
     }
 
-    public void setWatchedOn(Date watchedOn) {
-        this.watchedOn = watchedOn;
-    }
-
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
+    public void setWatchedOn(String watchedOn) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            this.watchedOn = simpleDateFormat.parse(watchedOn);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public int getReleaseYear() {
@@ -93,6 +93,14 @@ public class MediaItem {
         this.releaseYear = releaseYear;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public String toString() {
         return "MediaItem{" +
@@ -101,7 +109,7 @@ public class MediaItem {
                 ", genre='" + genre + '\'' +
                 ", category='" + category + '\'' +
                 ", watchedOn=" + watchedOn +
-                ", isFavorite=" + isFavorite +
+                ", favorite=" + favorite +
                 ", releaseYear=" + releaseYear +
                 '}';
     }
