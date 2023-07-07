@@ -77,7 +77,7 @@ public class MediaItem {
     }
 
     public void setWatchedOn(String watchedOn) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             this.watchedOn = simpleDateFormat.parse(watchedOn);
         } catch (ParseException e) {
